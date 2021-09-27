@@ -1,0 +1,36 @@
+.boxcaja{
+    background-color: whitesmoke;
+    margin: 2%;
+}
+.titulo{
+    display: flex;
+    justify-content: center;
+}
+.titulo h2, .titulo{
+    padding: 0;
+    margin: 0;
+}
+.btn-agregar{
+    background-color: green;
+    color: white;
+}
+.ingreso{
+    color: blue;
+}
+.egreso{
+    color: red;
+}
+.footer{
+    background-color: wheat;
+    display: flex;
+    justify-content: space-evenly;
+}
+.boxtable{
+    display: flex;
+    justify-content: center;
+    max-height: 65vh;
+    overflow-y:auto;
+}
+table{
+    width: 80%;
+}

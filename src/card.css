@@ -1,0 +1,33 @@
+img{
+    width: 50%;
+}
+.card{
+    background-color: bisque;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+.card:hover{
+    background-color: rgb(206, 178, 145);
+}
+.Libre{
+    background-color: blue;
+    color: white;
+}
+.Ocupado{
+    background-color: green;
+    color: white;
+}
+.reserva{
+    background-color: yellow;
+}
+.Limpieza{
+    background-color: red;
+    color: white;
+}
+.icon{
+    display: flex;
+    justify-content: center;
+}
+.room{
+    font-weight: bold;
+}

@@ -1,0 +1,25 @@
+#limpieza, #ocupado{
+    border: solid 4px red;
+    margin-top: 18%;
+}
+
+.btn2 button{
+    width: 100px;
+    height: 100px;
+}
+.control{
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+}
+.btn2b button{
+border: solid 2px blue;
+width: 50%;
+height: 30px;
+}
+.btn2b button:active{
+    background-color: blue;
+}
+.btn2{
+    margin-bottom: 2%;
+}

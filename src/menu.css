@@ -1,0 +1,28 @@
+.boxdatacard{
+    margin: 0 2%;
+    padding: 0;
+    background-color: white;
+    position: sticky;
+    top: 12%;
+}
+.datacard{
+    margin: 2% 0;
+    padding: 0;
+    text-align: center;
+}
+.datacard img,h3{
+    margin: 0;
+    padding: 0;
+}
+.icon{
+    display: flex;
+    justify-content: center;
+}
+.datacard img{
+    width: 8%;
+}
+@media (max-width:411px) {
+ .boxdatacard{
+     display: none;
+ }   
+}

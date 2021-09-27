@@ -1,0 +1,38 @@
+.boxnotas{
+    margin: 0 2%;
+    padding: 0;
+}
+.reservado{
+    background-color: orangered;
+    color: white;
+    font-weight: bold;
+}
+.notas{
+    background-color: white;
+    margin-top: 0;
+    padding: 0.3%;
+    position: sticky;
+}
+.danger{
+    color: red;
+    background-color: rgb(244, 242, 96);
+    font-weight: bold;
+}
+.predanger{
+    color: blue;
+    background-color: rgb(207, 237, 238);
+}
+h5{
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    font-size: larger;
+    margin: 0;
+}
+.nav_recordatorio{
+    display: flex;
+    justify-content: center;
+}
+@media (max-width:411px) {
+ 
+}
