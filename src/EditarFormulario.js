@@ -1,80 +1,82 @@
-import "./formulario.css";
-
+import { useEffect, useState } from "react";
+import { db } from "./Firebase";
+let id = "";
 function onSubmit(event) {
   event.preventDefault();
 }
-function opReservar() {
-  document.getElementById("op-reservar").style.backgroundColor = "blue";
-  document.getElementById("op-reservar").style.color = "white";
-  document.getElementById("btn-op-registrar").style.backgroundColor = "white";
-  document.getElementById("btn-op-registrar").style.color = "black";
-  document.getElementById("fechaReservas").style.display = "block";
-  document.getElementById("clic-reservar").style.display = "block";
-  document.getElementById("clic-registrar").style.display = "none";
-}
-function opRegistrar() {
-  document.getElementById("op-reservar").style.backgroundColor = "white";
-  document.getElementById("op-reservar").style.color = "black";
-  document.getElementById("btn-op-registrar").style.backgroundColor = "blue";
-  document.getElementById("btn-op-registrar").style.color = "white";
-  document.getElementById("fechaReservas").style.display = "none";
-  document.getElementById("clic-reservar").style.display = "none";
-  document.getElementById("clic-registrar").style.display = "block";
-}
-function precioTotal() {
-  let tiempodeHospedaje = document.getElementById("tiempodeHospedaje").value;
-  let precioxNoche = document.getElementById("precioNoche").value;
-  let precioTotal = tiempodeHospedaje * precioxNoche;
-  document.getElementById("importeTotal").value = precioTotal;
-  return precioTotal;
-}
-function cerrar() {
-  document.getElementById("formulario").style.display="none";
-  document.getElementById("menu").style.display="block";
-  document.getElementById("ocupado").style.display = "none";
-  document.getElementById("limpieza").style.display = "none";
-  if (window.innerWidth<=411) {
-    document.getElementById("menu").style.display="none";
-    document.getElementById("alertas").style.display="block";
+function EditarFormulario() {
+  const [usuario, setusuario] = useState([]);
+  useEffect(() => {
+    db.collection("editar")
+      .doc("editarUsuario")
+      .onSnapshot((doc) => {
+        id = doc.data().usuario;
+        db.collection("huespedes")
+          .doc(id)
+          .get()
+          .then((doc) => {
+            setusuario(doc.data());
+          });
+      });
+  }, []);
+
+  function actualizarHuesped() {
+    if (window.confirm("Seguro que desea Actualizar?")) {
+      let nombres = document.getElementById("editnombres").value;
+    let documentodeId = document.getElementById("editdocumentodeId").value;
+    let numerodeId = document.getElementById("editnumerodeId").value;
+    let numerodeTelefono = document.getElementById("editnumerodeTelefono").value;
+    let tiempodeHospedaje = document.getElementById("edittiempodeHospedaje").value;
+    let precio_noche = document.getElementById("editprecioNoche").value;
+    let importeaPagar = tiempodeHospedaje * precio_noche;
+    let importePagado = document.getElementById("editimportePagado").value;
+    let observaciones = document.getElementById("editobservaciones").value;
+    db.collection("huespedes").doc(id)
+      .update({
+        observaciones: observaciones,
+        modificado: new Date(),
+        nombres: nombres,
+        documento_de_identificacion: documentodeId,
+        numero_de_identificacion: numerodeId,
+        numero_Telefono: numerodeTelefono,
+        tiempo_Hospedaje: tiempodeHospedaje,
+        precio_Noche: precio_noche,
+        importe_Pagar: importeaPagar,
+        importe_Pagado: importePagado,
+      })
+      .then((docRef) => {
+        db.collection("habitaciones")
+          .doc("h" + usuario.numero_Habitacion)
+          .update({
+            tiempodeHospedaje: tiempodeHospedaje,
+            deuda: importeaPagar - importePagado,
+          });
+      });
+    document.getElementById("editarformulario").reset();
+    // document.getElementById("formulario").style.display = "none";
+    // document.getElementById("menu").style.display = "none";
+    if (window.innerWidth <= 411) {
+      document.getElementById("menu").style.display = "none";
+    }
+    }else{
+      document.getElementById("editarformulario").reset();
+    }
   }
-}
-function Formulario(props) {
+
   return (
     <form
       className="formulario"
-      id="formulario"
-      autoComplete="off"
+      id="editarformulario"
       onSubmit={onSubmit}
+      autoComplete="off"
     >
-      <h5>HABITACIÓN - <b id="numeroDeHabitacion">101</b></h5>
       <div className="form_container">
-        <div className="btn">
-          <div>
-            <button
-              className="btn-opcion op-registrar"
-              id="btn-op-registrar"
-              onClick={opRegistrar}
-            >
-              Registrar
-            </button>
-            <button
-              className="btn-opcion"
-              id="op-reservar"
-              onClick={opReservar}
-            >
-              Reservar
-            </button>
-          </div>
-          <button className="btn-cerrar" onClick={cerrar}>
-            x
-          </button>
-        </div>
         <div className="form_group">
           <input
             type="text" 
-            id="nombres"
+            id="editnombres"
             className="form_input"
-            placeholder=" "
+            placeholder=" " defaultValue={usuario.nombres}
           />
           <label htmlFor="nombres" className="form_label">
             Nombres:
@@ -83,7 +85,7 @@ function Formulario(props) {
         </div>
         <div className="doble">
           <div className="form_group">
-            <select id="documentodeId" className="form_input small">
+            <select id="editdocumentodeId" className="form_input small" defaultValue={usuario.documento_de_identificacion}>
               <option value="Dni">DNI</option>
               <option value="Pasaporte">Pasaporte</option>
               <option value="Carnet de extranjeria">
@@ -96,12 +98,13 @@ function Formulario(props) {
           <div className="form_group">
             <input
               type="text"
-              id="numerodeId"
+              id="editnumerodeId"
               className="form_input small"
               placeholder=" "
+              defaultValue={usuario.numero_de_identificacion}
             />
             <label htmlFor="numerodeId" className="form_label">
-              Nro. de documento:
+              Nro. Doc:
             </label>
             <span className="form_line"></span>
           </div>
@@ -110,35 +113,25 @@ function Formulario(props) {
           <div className="form_group">
             <input
               type="number"
-              id="numerodeTelefono"
+              id="editnumerodeTelefono"
               className="form_input"
               placeholder=" "
+              defaultValue={usuario.numero_Telefono}
             />
             <label htmlFor="numerodeTelefono" className="form_label">
               Telefono:
             </label>
             <span className="form_line"></span>
           </div>
-          <div
-            className="form_group"
-            id="fechaReservas"
-            style={{ display: "none" }}
-          >
-            <input type="date" id="nuevafecha" className="form_input" />
-            <label htmlFor="nuevafecha" className="form_label">
-              Fecha a reservar:
-            </label>
-            <span className="form_line"></span>
-          </div>
         </div>
         <div className="doble">
           <div className="form_group">
             <input
               type="number"
-              id="tiempodeHospedaje"
+              id="edittiempodeHospedaje"
               className="form_input"
               placeholder=" "
-              onKeyUp={precioTotal}
+              defaultValue={usuario.tiempo_Hospedaje}
             />
             <label htmlFor="tiempodeHospedaje" className="form_label">
               Dias de hospedaje:
@@ -148,10 +141,10 @@ function Formulario(props) {
           <div className="form_group">
             <input
               type="number"
-              id="precioNoche"
+              id="editprecioNoche"
               className="form_input"
               placeholder=" "
-              onKeyUp={precioTotal}
+              defaultValue={usuario.precio_Noche}
             />
             <label htmlFor="precioNoche" className="form_label">
               Precio por dia: S/
@@ -163,10 +156,10 @@ function Formulario(props) {
           <div className="form_group">
             <input
               type="number"
-              id="importeTotal"
+              id="editimporteTotal"
               className="form_input"
               placeholder=" "
-              disabled={true}
+              defaultValue={usuario.importe_Pagar}
             />
             <label htmlFor="importeTotal" className="form_label">
               Importe a pagar: S/
@@ -176,9 +169,10 @@ function Formulario(props) {
           <div className="form_group">
             <input
               type="number"
-              id="importePagado"
+              id="editimportePagado"
               className="form_input"
               placeholder=" "
+              defaultValue={usuario.importe_Pagado}
             />
             <label htmlFor="importePagado" className="form_label">
               Importe pagado: S/
@@ -188,10 +182,11 @@ function Formulario(props) {
         </div>
         <div className="form_group">
           <textarea
-            id="observaciones"
+            id="editobservaciones"
             rows="5"
             placeholder=" "
             className="form_input"
+            defaultValue={usuario.observaciones}
           ></textarea>
           <label htmlFor="observaciones" className="form_label">
             Observaciones:
@@ -200,20 +195,19 @@ function Formulario(props) {
         </div>
         <div className="registrar">
           <div>
-            <button
+          {/* <button
               className="btn-registrar"
-              onClick={props.nuevoCliente}
-              id="clic-registrar"
-            >
-              Registrar
-            </button>
-            <button
-              className="btn-registrar"
-              onClick={props.reservarHabitacion}
               id="clic-reservar"
-              style={{ backgroundColor: "green", display: "none" }}
+              style={{ backgroundColor: "blue"}}
             >
-              Reservar
+              Editar
+            </button> */}
+            <button
+              className="btn-registrar"
+              onClick={actualizarHuesped}
+              style={{ backgroundColor: "green"}}
+            >
+              Actualizar
             </button>
           </div>
         </div>
@@ -221,4 +215,4 @@ function Formulario(props) {
     </form>
   );
 }
-export default Formulario;
+export default EditarFormulario;

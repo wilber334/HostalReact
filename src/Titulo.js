@@ -1,4 +1,6 @@
 import "./titulo.css";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 function fecha() {
   let meses = [
     "Enero",
@@ -55,15 +57,22 @@ function vertodos() {
   }
 }
 function Titulo() {
+  const [modoedicion, setmodoedicion]=useState(false);
   return (
     <header>
       <h1>Hostal Santa Catalina</h1>
       <h4>{fecha()}</h4>
-      <button className="btn-opcion" onClick={sololibres}>
-        ver solo libres
-      </button>
+      {modoedicion?<Link to="/">
+        <button onClick={()=>{setmodoedicion(!modoedicion)}}>Guardar Cambios</button>
+      </Link> :<Link to="/edicion">
+        <button onClick={()=>{setmodoedicion(!modoedicion)}}>Modo Edicion</button>
+      </Link>}
+      
       <button className="btn-opcion" onClick={vertodos}>
         ver todos
+      </button>
+      <button className="btn-opcion" onClick={sololibres}>
+        ver solo libres
       </button>
     </header>
   );

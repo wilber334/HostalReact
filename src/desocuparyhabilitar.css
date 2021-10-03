@@ -1,8 +1,14 @@
-#limpieza, #ocupado{
+#limpieza{
     border: solid 4px red;
     margin-top: 18%;
 }
+#ocupado{
+margin-top: 0;
 
+}
+#ocupado .btn2 button{
+    height: auto;
+}
 .btn2 button{
     width: 100px;
     height: 100px;

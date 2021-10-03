@@ -12,6 +12,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Principal from "./Principal";
 import Clientes from "./Clientes";
 import Caja from "./Caja";
+import Principaldos from "./Principaldos";
+import EditarFormulario from "./EditarFormulario";
 
 var numeroDeHabitacion;
 
@@ -35,6 +37,8 @@ function App() {
     actualizarNumeroHabitacion();
     document.getElementById("ocupado").style.display = "none";
     document.getElementById("menu").style.display = "block";
+    document.getElementById("formulario").style.display = "none";
+    document.getElementById("editarformulario").style.display = "none";
     db.collection("habitaciones")
       .doc("h" + numeroDeHabitacion)
       .update({
@@ -160,7 +164,9 @@ function App() {
                   nuevoCliente={nuevoCliente}
                   reservarHabitacion={reservarHabitacion}
                 />
+                
                 <Desocupar vacio={vacio} inputReservar={inputReservar} />
+                <EditarFormulario/>
                 <Habilitar libre={libre} inputReservar={inputReservar} />
               </div>
               <Alertas />
@@ -169,6 +175,9 @@ function App() {
           <Switch>
             <Route exact path="/">
               <Principal />
+            </Route>
+            <Route exact path="/edicion">
+              <Principaldos />
             </Route>
             <Route exact path="/reservaciones">
               <Reservaciones />
