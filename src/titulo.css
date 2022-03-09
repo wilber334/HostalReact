@@ -11,3 +11,14 @@ h1,h4{
     margin: 0;
     padding: 0;
 }
+.vermenu{
+    display: none;
+}
+@media (max-width:412px) {
+    .vermenu{
+        border: solid 2px blue;
+        display: inline-block;
+        background-color: cornflowerblue;
+        font-weight: bold;
+    }
+}

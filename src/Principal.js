@@ -7,7 +7,6 @@ var numeroDeHabitacion;
 function Principal() {
   const [listaHabitacion, setlistaHabitacion]=useState([]);
   useEffect(()=>{
-    const traerDatos=()=>{
       db.collection("habitaciones").where("situacion","!=","No Disponible")
     .onSnapshot((querySnapshot) => {
         var hab = [];
@@ -15,24 +14,27 @@ function Principal() {
             hab.push({...doc.data(),id:doc.id});
         });
         setlistaHabitacion(hab);
-    });}
-    traerDatos(); 
-  },[]);
-  db.collection("reservas")
-    .where("fecha_reservada", ">=", new Date().getTime())
-    .orderBy("fecha_reservada")
-    .onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        document.getElementById("r" + doc.data().numero_Habitacion).className =
-          "reserva";
-        document.getElementById("r" + doc.data().numero_Habitacion).innerText =
-          "reservado para:" +
-          dayjs(doc.data().verfecha_reservada).format("DD/MM/YYYY") +
-          " por: " +
-          doc.data().tiempo_Hospedaje +
-          " dias";
-      });
     });
+    
+  },[]);
+  useEffect(()=>{
+    
+    db.collection("reservas")
+      .where("fecha_reservada", ">=", new Date().getTime())
+      .orderBy("fecha_reservada","desc")
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          document.getElementById("r" + doc.data().numero_Habitacion).className =
+           "reserva";
+          document.getElementById("r" + doc.data().numero_Habitacion).innerText =
+            "reservado para:" +
+            dayjs(doc.data().verfecha_reservada).format("DD/MM/YYYY") +
+            " por: " +
+            doc.data().tiempo_Hospedaje +
+            " dias";
+        });
+      });
+  },[]);
   function expandir(id) {
     numeroDeHabitacion = id.currentTarget.id;
     document.getElementById("numeroDeHabitacion").innerText =
@@ -57,7 +59,7 @@ function Principal() {
       db.collection("editar")
       .doc("editarUsuario")
       .update({
-        usuario: usuario, 
+        usuario:usuario, 
       });
       document.getElementById("formulario").style.display = "none";
       document.getElementById("ocupado").style.display = "block";

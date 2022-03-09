@@ -56,12 +56,19 @@ function vertodos() {
     ocupado[i].parentNode.parentNode.style.display = "grid";
   }
 }
+function verMenu() {
+    document.getElementById("ocupado").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+    document.getElementById("formulario").style.display = "none";
+    document.getElementById("editarformulario").style.display = "none";
+}
 function Titulo() {
   const [modoedicion, setmodoedicion]=useState(false);
   return (
     <header>
       <h1>Hostal Santa Catalina</h1>
       <h4>{fecha()}</h4>
+      <button className="vermenu" onClick={verMenu}>Menu</button>
       {modoedicion?<Link to="/">
         <button onClick={()=>{setmodoedicion(!modoedicion)}}>Guardar Cambios</button>
       </Link> :<Link to="/edicion">

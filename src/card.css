@@ -28,6 +28,11 @@ img{
     display: flex;
     justify-content: center;
 }
-.room{
+
+.room:first-line{
     font-weight: bold;
+}
+.botonelegido:hover{
+    font-weight: bold;
+    color: white;
 }

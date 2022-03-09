@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
 import { db } from "./Firebase";
-let id = "";
+let user = "";
 function onSubmit(event) {
   event.preventDefault();
 }
 function EditarFormulario() {
   const [usuario, setusuario] = useState([]);
+  //reparar esta parte, parece que no reconoce la ruta 
   useEffect(() => {
     db.collection("editar")
       .doc("editarUsuario")
       .onSnapshot((doc) => {
-        id = doc.data().usuario;
+        user = doc.data().usuario; //aqui obtenemos el id para buscar en huespedes        
         db.collection("huespedes")
-          .doc(id)
-          .get()
-          .then((doc) => {
-            setusuario(doc.data());
-          });
+      .doc(String(user))
+      .get()
+      .then((doc) => {
+        setusuario(doc.data());
       });
+      });
+      
   }, []);
 
   function actualizarHuesped() {
@@ -31,7 +33,7 @@ function EditarFormulario() {
     let importeaPagar = tiempodeHospedaje * precio_noche;
     let importePagado = document.getElementById("editimportePagado").value;
     let observaciones = document.getElementById("editobservaciones").value;
-    db.collection("huespedes").doc(id)
+    db.collection("huespedes").doc(user)
       .update({
         observaciones: observaciones,
         modificado: new Date(),

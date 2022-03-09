@@ -1,60 +1,47 @@
 import "./reservaciones.css";
 import { db } from "./Firebase";
 import { Link } from "react-router-dom";
+import printJS from "print-js";
+import { useState, useEffect } from "react";
+import dayjs from "dayjs";
 function Clientes() {
-    var clientes = [];
-  function mostrarDatos() {
-    db.collection("huespedes").where("mes","==",new Date().getMonth()+1)
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        clientes.push(doc.data());
+  const [huespedes, sethuespedes]=useState([]);
+  const [fechafiltro, setfechafiltro]=useState(new Date().getTime());
+  
+  useEffect(()=>{
+    db.collection("huespedes")
+      .where("date", ">=", fechafiltro)
+      .orderBy("date")
+      .get()
+      .then((querySnapshot) => {
+        const docs = [];
+        querySnapshot.forEach((doc) => {
+          docs.push({ ...doc.data(), id: doc.id });
+        });
+        sethuespedes(docs);
       });
-      clientes.sort(function(a, b) {
-        return b.date - a.date;
-      });
-      addTabla();
-    });
-  }
-  function addTabla() {
-    let tabla = document.getElementById("tabla");
-    tabla.innerHTML = "";
-    for (let i = 0; i < clientes.length; i++) {
-      tabla.innerHTML +=
-        "<tr><td>" +
-        clientes[i].fecha +
-        "</td><td>" +
-        clientes[i].nombres +
-        "</td><td>" +
-        clientes[i].documento_de_identificacion +
-        "</td><td>" +
-        clientes[i].numero_de_identificacion +
-        "</td><td>" +
-        clientes[i].numero_Telefono +
-        "</td><td>" +
-        clientes[i].numero_Habitacion +
-        "</td><td>" +
-        clientes[i].tiempo_Hospedaje +
-        "</td><td>" +
-        clientes[i].importe_Pagar +
-        "</td><td>" +
-        clientes[i].importe_Pagado +
-        "</td></tr>";
-    }
-  }
-  mostrarDatos();
+  },[fechafiltro]);
+  
     return(
         <div className="rDatos" id="registrodeDatos">
       <div className="headDatos">
-        <h3>REGISTRO DE HUESPEDES</h3>
+        <h3>REGISTRO DE HUESPEDES<button onClick={()=>{
+          printJS("imprimirClientes","html")
+        }}>imprimir</button></h3>
         <Link to="/">
         <button className="btn-cerrar">x</button>
         </Link>
       </div>
-      <table>
+      <table id="imprimirClientes">
         <thead>
           <tr>
-            <th>Fecha</th>
+            <th>Fecha
+            <input type="date" id="fechafilterhuespedes" onChange={()=>{
+                setfechafiltro(new Date(dayjs(document.getElementById("fechafilterhuespedes").value).format(
+                  "YYYY,MM,DD"
+                )).getTime())
+                }} />
+            </th>
             <th>Nombres</th>
             <th>Doc. Identificación</th>
             <th>Num. Documento</th>
@@ -65,7 +52,26 @@ function Clientes() {
             <th>Importe Pagado</th>
           </tr>
         </thead>
-        <tbody id="tabla"></tbody>
+        <tbody id="tabla">
+        {huespedes.map((item) => {
+            return (
+              <tr>
+                <td>{item.date}</td>
+                <td>{item.nombres}</td>
+                <td>{item.numero_Habitacion}</td>
+                <td>{item.nombres}</td>
+                <td>{item.documento_de_identificacion}</td>
+                <td>{item.numero_de_identificacion}</td>
+                <td>{item.numero_Telefono}</td>
+                <td>{item.importe_Pagar}</td>
+                <td>{item.importe_Pagado}</td>
+                <td>{item.observaciones}</td>
+                <td>{item.fecha}</td>
+                <td><button>{item.id}</button></td>
+            </tr>
+            );
+          })}
+          </tbody>
       </table>
     </div>
     );

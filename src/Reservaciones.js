@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./reservaciones.css";
 import { useState, useEffect } from "react";
 import Reservascard from "./Reservascard";
+import printJS from "print-js";
 
 function Reservaciones() {
   const [reservas, setreservas] = useState([]);
@@ -25,12 +26,14 @@ function Reservaciones() {
   return (
     <div className="rDatos" id="registrodeDatos">
       <div className="headDatos">
-        <h3>RESERVACIONES</h3>
+        <h3>RESERVACIONES <button onClick={()=>{
+          printJS("imprimirReservaciones","html")
+        }}>imprimir</button></h3>
         <Link to="/">
           <button className="btn-cerrar">x</button>
         </Link>
       </div>
-      <table>
+      <table id="imprimirReservaciones">
         <thead>
           <tr>
             <th>

@@ -179,6 +179,7 @@ function Formulario(props) {
               id="importePagado"
               className="form_input"
               placeholder=" "
+              defaultValue={0}
             />
             <label htmlFor="importePagado" className="form_label">
               Importe pagado: S/

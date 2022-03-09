@@ -21,8 +21,8 @@
 .datacard img{
     width: 8%;
 }
-@media (max-width:411px) {
+@media (max-width:412px) {
  .boxdatacard{
      display: none;
- }   
+ }
 }

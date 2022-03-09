@@ -14,6 +14,7 @@ import Clientes from "./Clientes";
 import Caja from "./Caja";
 import Principaldos from "./Principaldos";
 import EditarFormulario from "./EditarFormulario";
+import Tareas from "./Tareas";
 
 var numeroDeHabitacion;
 
@@ -73,18 +74,17 @@ function App() {
     db.collection("huespedes")
       .add({
         observaciones: observaciones,
-        date: new Date(),
-        mes: new Date().getMonth() + 1,
-        fecha: dayjs().format("DD/MM/YYYY  HH:mm"),
+        fecha:new Date().getTime(),
+        verfecha: dayjs().format("DD/MM/YYYY  HH:mm"),
         nombres: nombres,
         documento_de_identificacion: documentodeId,
         numero_de_identificacion: numerodeId,
         numero_Telefono: numerodeTelefono,
         numero_Habitacion: numeroDeHabitacion,
-        tiempo_Hospedaje: tiempodeHospedaje,
-        precio_Noche: precio_noche,
-        importe_Pagar: importeaPagar,
-        importe_Pagado: importePagado,
+        tiempo_Hospedaje: Number(tiempodeHospedaje),
+        precio_Noche: Number(precio_noche),
+        importe_Pagar: Number(importeaPagar),
+        importe_Pagado: Number(importePagado),
       })
       .then((docRef) => {
         document.getElementById("formulario").style.display = "none";
@@ -103,7 +103,7 @@ function App() {
           verfecha:dayjs().format("DD/MM/YYYY"),
           tipo: "ingreso",
           descripcion: "cuenta habitacion " + numeroDeHabitacion,
-          monto: parseFloat(importePagado),
+          monto: Number(importePagado),
         });
       });
     document.getElementById("formulario").style.display = "none";
@@ -127,7 +127,6 @@ function App() {
     let observaciones = document.getElementById("observaciones").value;
     db.collection("reservas").add({
       observaciones: observaciones,
-      date: new Date(),
       fecha: dayjs().format("DD/MM/YYYY  HH:mm"),
       nombres: nombres,
       verfecha_reservada: fechaReservada,
@@ -138,10 +137,10 @@ function App() {
       numero_de_identificacion: numerodeId,
       numero_Telefono: numerodeTelefono,
       numero_Habitacion: numeroDeHabitacion,
-      tiempo_Hospedaje: tiempodeHospedaje,
-      precio_Noche: precio_noche,
-      importe_Pagar: importeaPagar,
-      importe_Pagado: importePagado,
+      tiempo_Hospedaje: Number(tiempodeHospedaje),
+      precio_Noche: Number(precio_noche),
+      importe_Pagar: Number(importeaPagar),
+      importe_Pagado: Number(importePagado),
     });
     document.getElementById("formulario").style.display = "none";
     document.getElementById("formulario").reset();
@@ -187,6 +186,9 @@ function App() {
             </Route>
             <Route exact path="/caja">
               <Caja />
+            </Route>
+            <Route exact path="/tareas">
+              <Tareas />
             </Route>
           </Switch>
           <hr />
