@@ -6,6 +6,7 @@ function Cajacard(props) {
                 <td>{props.clase}</td>
                 <td>{props.descripcion}</td>
                 <td>{props.monto}</td>
+                <td>{props.metodo}</td>
             </tr>
     );
 }

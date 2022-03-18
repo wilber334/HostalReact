@@ -11,56 +11,71 @@ function EditarFormulario() {
     db.collection("editar")
       .doc("editarUsuario")
       .onSnapshot((doc) => {
-        user = doc.data().usuario; //aqui obtenemos el id para buscar en huespedes        
-        db.collection("huespedes")
-      .doc(String(user))
-      .get()
-      .then((doc) => {
-        setusuario(doc.data());
+        if (doc.exists) {
+          user = doc.data().usuario; //aqui obtenemos el id para buscar en huespedes        
+          db.collection("huespedes")
+            .doc(user)
+            .get()
+            .then((doc) => {
+              setusuario(doc.data());
+            });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+
+        // user = doc.data().usuario; //aqui obtenemos el id para buscar en huespedes        
+        // db.collection("huespedes")
+        //   .doc(user)
+        //   .get()
+        //   .then((doc) => {
+        //     setusuario(doc.data());
+        //   });
       });
-      });
-      
+
   }, []);
 
   function actualizarHuesped() {
     if (window.confirm("Seguro que desea Actualizar?")) {
       let nombres = document.getElementById("editnombres").value;
-    let documentodeId = document.getElementById("editdocumentodeId").value;
-    let numerodeId = document.getElementById("editnumerodeId").value;
-    let numerodeTelefono = document.getElementById("editnumerodeTelefono").value;
-    let tiempodeHospedaje = document.getElementById("edittiempodeHospedaje").value;
-    let precio_noche = document.getElementById("editprecioNoche").value;
-    let importeaPagar = tiempodeHospedaje * precio_noche;
-    let importePagado = document.getElementById("editimportePagado").value;
-    let observaciones = document.getElementById("editobservaciones").value;
-    db.collection("huespedes").doc(user)
-      .update({
-        observaciones: observaciones,
-        modificado: new Date(),
-        nombres: nombres,
-        documento_de_identificacion: documentodeId,
-        numero_de_identificacion: numerodeId,
-        numero_Telefono: numerodeTelefono,
-        tiempo_Hospedaje: tiempodeHospedaje,
-        precio_Noche: precio_noche,
-        importe_Pagar: importeaPagar,
-        importe_Pagado: importePagado,
-      })
-      .then((docRef) => {
-        db.collection("habitaciones")
-          .doc("h" + usuario.numero_Habitacion)
-          .update({
-            tiempodeHospedaje: tiempodeHospedaje,
-            deuda: importeaPagar - importePagado,
-          });
-      });
-    document.getElementById("editarformulario").reset();
-    // document.getElementById("formulario").style.display = "none";
-    // document.getElementById("menu").style.display = "none";
-    if (window.innerWidth <= 411) {
-      document.getElementById("menu").style.display = "none";
-    }
-    }else{
+      let documentodeId = document.getElementById("editdocumentodeId").value;
+      let numerodeId = document.getElementById("editnumerodeId").value;
+      let numerodeTelefono = document.getElementById("editnumerodeTelefono").value;
+      let tiempodeHospedaje = document.getElementById("edittiempodeHospedaje").value;
+      let precio_noche = document.getElementById("editprecioNoche").value;
+      let importeaPagar = tiempodeHospedaje * precio_noche;
+      let importePagado = document.getElementById("editimportePagado").value;
+      let observaciones = document.getElementById("editobservaciones").value;
+      let MetodoPago = document.getElementById("editMetodoPago").value;
+      db.collection("huespedes").doc(user)
+        .update({
+          observaciones: observaciones,
+          modificado: new Date(),
+          nombres: nombres,
+          documento_de_identificacion: documentodeId,
+          numero_de_identificacion: numerodeId,
+          numero_Telefono: numerodeTelefono,
+          tiempo_Hospedaje: tiempodeHospedaje,
+          precio_Noche: precio_noche,
+          importe_Pagar: importeaPagar,
+          importe_Pagado: importePagado,
+          Metodo_Pago: MetodoPago
+        })
+        .then((docRef) => {
+          db.collection("habitaciones")
+            .doc("h" + usuario.numero_Habitacion)
+            .update({
+              tiempodeHospedaje: tiempodeHospedaje,
+              deuda: importeaPagar - importePagado,
+            });
+        });
+      document.getElementById("editarformulario").reset();
+      // document.getElementById("formulario").style.display = "none";
+      // document.getElementById("menu").style.display = "none";
+      if (window.innerWidth <= 411) {
+        document.getElementById("menu").style.display = "none";
+      }
+    } else {
       document.getElementById("editarformulario").reset();
     }
   }
@@ -75,7 +90,7 @@ function EditarFormulario() {
       <div className="form_container">
         <div className="form_group">
           <input
-            type="text" 
+            type="text"
             id="editnombres"
             className="form_input"
             placeholder=" " defaultValue={usuario.nombres}
@@ -183,21 +198,34 @@ function EditarFormulario() {
           </div>
         </div>
         <div className="form_group">
+          <select id="editMetodoPago" className="form_input small">
+            <option value={usuario.Metodo_Pago} >{usuario.Metodo_Pago}</option>
+            <option value="Efectivo" >Efectivo</option>
+            <option value="Yape">Yape</option>
+            <option value="Plin">Plin</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <label htmlFor="editMetodoPago"></label>
+          <span className="form_line"></span>
+        </div>
+        <div className="form_group">
           <textarea
             id="editobservaciones"
             rows="5"
-            placeholder=" "
+            placeholder=""
             className="form_input"
             defaultValue={usuario.observaciones}
           ></textarea>
-          <label htmlFor="observaciones" className="form_label">
+          <label htmlFor="editobservaciones" className="form_label">
             Observaciones:
           </label>
           <span className="form_line"></span>
         </div>
         <div className="registrar">
           <div>
-          {/* <button
+            {/* <button
               className="btn-registrar"
               id="clic-reservar"
               style={{ backgroundColor: "blue"}}
@@ -207,7 +235,7 @@ function EditarFormulario() {
             <button
               className="btn-registrar"
               onClick={actualizarHuesped}
-              style={{ backgroundColor: "green"}}
+              style={{ backgroundColor: "green" }}
             >
               Actualizar
             </button>

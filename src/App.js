@@ -15,7 +15,6 @@ import Caja from "./Caja";
 import Principaldos from "./Principaldos";
 import EditarFormulario from "./EditarFormulario";
 import Tareas from "./Tareas";
-
 var numeroDeHabitacion;
 
 function actualizarNumeroHabitacion() {
@@ -71,6 +70,7 @@ function App() {
     let importeaPagar = tiempodeHospedaje * precio_noche;
     let importePagado = document.getElementById("importePagado").value;
     let observaciones = document.getElementById("observaciones").value;
+    let MetodoPago = document.getElementById("MetodoPago").value;
     db.collection("huespedes")
       .add({
         observaciones: observaciones,
@@ -85,6 +85,7 @@ function App() {
         precio_Noche: Number(precio_noche),
         importe_Pagar: Number(importeaPagar),
         importe_Pagado: Number(importePagado),
+        Metodo_Pago: MetodoPago,
       })
       .then((docRef) => {
         document.getElementById("formulario").style.display = "none";
@@ -100,10 +101,11 @@ function App() {
           });
         db.collection("caja").add({
           fecha: new Date().getTime(),
-          verfecha:dayjs().format("DD/MM/YYYY"),
+          verfecha:dayjs().format("DD/MM/YYYY  HH:mm"),
           tipo: "ingreso",
-          descripcion: "cuenta habitacion " + numeroDeHabitacion,
+          descripcion: "Habitación " + numeroDeHabitacion,
           monto: Number(importePagado),
+          metodoPago: MetodoPago
         });
       });
     document.getElementById("formulario").style.display = "none";
@@ -125,6 +127,7 @@ function App() {
     let importePagado = document.getElementById("importePagado").value;
     let fechaReservada = document.getElementById("nuevafecha").value;
     let observaciones = document.getElementById("observaciones").value;
+    let MetodoPago = document.getElementById("MetodoPago").value;
     db.collection("reservas").add({
       observaciones: observaciones,
       fecha: dayjs().format("DD/MM/YYYY  HH:mm"),
@@ -141,6 +144,7 @@ function App() {
       precio_Noche: Number(precio_noche),
       importe_Pagar: Number(importeaPagar),
       importe_Pagado: Number(importePagado),
+      Metodo_Pago: MetodoPago,
     });
     document.getElementById("formulario").style.display = "none";
     document.getElementById("formulario").reset();
@@ -155,7 +159,7 @@ function App() {
       <div>
         <Titulo />
         <div className="App">
-          <div>
+          <div id="seccionMenu">
             <div className="aside">
               <div>
                 <Menu />
@@ -163,7 +167,6 @@ function App() {
                   nuevoCliente={nuevoCliente}
                   reservarHabitacion={reservarHabitacion}
                 />
-                
                 <Desocupar vacio={vacio} inputReservar={inputReservar} />
                 <EditarFormulario/>
                 <Habilitar libre={libre} inputReservar={inputReservar} />

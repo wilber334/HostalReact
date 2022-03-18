@@ -57,24 +57,34 @@ function vertodos() {
   }
 }
 function verMenu() {
-    document.getElementById("ocupado").style.display = "none";
-    document.getElementById("menu").style.display = "block";
-    document.getElementById("formulario").style.display = "none";
-    document.getElementById("editarformulario").style.display = "none";
+  document.getElementById("ocupado").style.display = "none";
+  document.getElementById("menu").style.display = "block";
+  document.getElementById("formulario").style.display = "none";
+  document.getElementById("editarformulario").style.display = "none";
 }
 function Titulo() {
-  const [modoedicion, setmodoedicion]=useState(false);
+  const [modoedicion, setmodoedicion] = useState(false);
+  const [editar, seteditar] = useState(false);
   return (
     <header>
       <h1>Hostal Santa Catalina</h1>
       <h4>{fecha()}</h4>
       <button className="vermenu" onClick={verMenu}>Menu</button>
-      {modoedicion?<Link to="/">
-        <button onClick={()=>{setmodoedicion(!modoedicion)}}>Guardar Cambios</button>
-      </Link> :<Link to="/edicion">
-        <button onClick={()=>{setmodoedicion(!modoedicion)}}>Modo Edicion</button>
-      </Link>}
-      
+
+      {editar ?
+        <>
+          {modoedicion ? <Link to="/"> {/*falta probar codigo*/}
+            <button onClick={() => { setmodoedicion(!modoedicion); seteditar(!editar) }}>Guardar Cambios</button>
+          </Link> : <Link to="/edicion">
+            <button onClick={() => { setmodoedicion(!modoedicion) }}>Modo Edicion</button>
+          </Link>}
+        </>
+        : <button onClick={() => {
+          if (window.confirm("¿seguro que desea editar?")) {
+            seteditar(!editar);
+          }
+        }}>Editar</button>
+      }
       <button className="btn-opcion" onClick={vertodos}>
         ver todos
       </button>

@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import { db } from "./Firebase";
+import dayjs from "dayjs";
 function Tareas() {
-  const [tarea, settarea] = useState([]);
+  const [ocurrencia, setocurrencia] = useState([]);
 
   useEffect(() => {
-    db.collection("tareas").onSnapshot((querySnapshot) => {
+    db.collection("ocurrencias").orderBy("fecha","desc").onSnapshot((querySnapshot) => {
       let task = [];
       querySnapshot.forEach((doc) => {
         task.push({ ...doc.data(), id: doc.id });
       });
-      settarea(task);
+      setocurrencia(task);
     });
   }, []);
+  
   return (
     <div
       className="tareas"
@@ -21,54 +23,65 @@ function Tareas() {
         margin: "0.5% 2%",
       }}
     >
-      <h3>Lista de Tareas</h3>
-      <ol>
-        {tarea.map((task) => {
-          return (
-            <li
-              key={task.id}
-            >
-                <div style={{display:"flex",justifyContent: "space-between"}}>
-                <p style={{ margin: "0" }}>{task.tarea}</p>
-              <div style={{ display: "flex" }}>
-                <p
-                  style={{
-                    color: "red",
-                    margin: "0",
-                    backgroundColor: "yellowgreen",
-                  }}
-                >
-                  {task.prioridad === "urgente" ? "Urgente" : null}
-                </p>
-                <button style={{ backgroundColor: "green" }}>&#10003;</button>
-              </div>
-                </div>
-              
-            </li>
-          );
-        })}
-      </ol>
+      <h3>Lista de Ocurrencias</h3>
       <div>
-        <label htmlFor="tarea">Nueva Tarea</label> <input type="text" id="tarea" />
-        <label htmlFor="prioridad">Prioridad</label>
-        <select name="" id="prioridad">
+        <label htmlFor="ocurrencia">Ocurrencia</label> <input type="text" id="ocurrencia" />
+        <label htmlFor="status">status</label>
+        <select name="" id="status">
+          <option value="leve">Leve</option>
           <option value="normal">Normal</option>
-          <option value="urgente">Urgente</option>
+          <option value="grave">Grave</option>
         </select>
         <button
           onClick={() => {
-            db.collection("tareas").add({
+            db.collection("ocurrencias").add({
               fecha: new Date().getTime(),
-              // verfecha:dayjs().format("DD/MM/YYYY"),
-              tarea: document.getElementById("tarea").value,
-              prioridad: document.getElementById("prioridad").value,
-              estado: 0,
+              verfecha:dayjs().format("DD/MM/YYYY HH:mm"),
+              ocurrencia: document.getElementById("ocurrencia").value,
+              status: document.getElementById("status").value,
             });
           }}
         >
           agregar
         </button>
+        <button onClick={()=>{window.print()}} style={{float:"right"}}>Imprimir</button>
       </div>
+      <ol id="listaOcurrencias">
+        {ocurrencia.map((task) => {
+          return (
+            <li
+              key={task.id}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <p style={{ margin: "0" }}>
+                  {task.verfecha+" => "+task.ocurrencia}
+                  
+                  </p>
+                <div style={{ display: "flex" }}>
+                  {task.status ==="grave" ?
+                    <p
+                      style={{
+                        color: "red",
+                        margin: "0",
+                        backgroundColor: "yellowgreen",
+                      }}
+                    >
+                      {task.status}
+                    </p>
+                    : <p
+                      style={{
+                        margin: "0",
+                      }}
+                    >
+                      {task.status}
+                    </p>}
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      
     </div>
   );
 }

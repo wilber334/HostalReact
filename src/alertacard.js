@@ -8,6 +8,7 @@ function Alertacard(props) {
     let diferenciaHoras;
     let diferenciaMinutos;
     let futuro;
+    
     function contadorTiempo(fecha) {
         let presente = dayjs();
         futuro = dayjs(fecha);

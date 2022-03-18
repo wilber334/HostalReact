@@ -84,7 +84,7 @@ function Formulario(props) {
         <div className="doble">
           <div className="form_group">
             <select id="documentodeId" className="form_input small">
-              <option value="Dni">DNI</option>
+              <option value="Dni" defaultChecked>DNI</option>
               <option value="Pasaporte">Pasaporte</option>
               <option value="Carnet de extranjeria">
                 Carnet de extranjeria
@@ -187,6 +187,18 @@ function Formulario(props) {
             <span className="form_line"></span>
           </div>
         </div>
+        <div className="form_group">
+            <select id="MetodoPago" className="form_input small">
+              <option value="Efectivo" defaultChecked>Efectivo</option>
+              <option value="Yape">Yape</option>
+              <option value="Plin">Plin</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+              <option value="Otro">Otro</option>
+            </select>
+            <label htmlFor="MetodoPago"></label>
+            <span className="form_line"></span>
+          </div>
         <div className="form_group">
           <textarea
             id="observaciones"

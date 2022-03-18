@@ -28,7 +28,6 @@ function Principaldos() {
 <div className="article">
   {card}
 </div>
-  );
-  
+  );  
 }
 export default Principaldos;

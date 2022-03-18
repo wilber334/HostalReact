@@ -54,7 +54,7 @@ function Menu() {
           }
         }}>
           <img src={reporte} alt="imagen de reporte" />
-          <h4>Tareas</h4>
+          <h4>Ocurrencias</h4>
         </Link>
       </div>
     </div>

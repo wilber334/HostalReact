@@ -23,12 +23,24 @@ function Reservaciones() {
         setreservas(docs);
       });
   }, [fechafiltro]);
+
+  function Exportar(table,name){//FUNCION PARA EXPORTAR EN EXCEL
+    var uri = 'data:application/vnd.ms-excel;base64,'
+    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+  
+    if (!table.nodeType) table = document.getElementById(table)
+     var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+     window.location.href = uri + base64(format(template, ctx))
+  }
   return (
     <div className="rDatos" id="registrodeDatos">
       <div className="headDatos">
         <h3>RESERVACIONES <button onClick={()=>{
           printJS("imprimirReservaciones","html")
-        }}>imprimir</button></h3>
+        }}>imprimir</button><button onClick={()=>{Exportar("imprimirReservaciones","Reservaciones")}}>descargar excel</button> {/*EXPORTAR EN EXCEL*/}
+        </h3>
         <Link to="/">
           <button className="btn-cerrar">x</button>
         </Link>
@@ -44,17 +56,18 @@ function Reservaciones() {
                 )).getTime())
                 }} />
             </th>
-            <th>Dias Reservados</th>
-            <th>Num. Habitación</th>
+            <th>Reservado por:</th>
+            <th>Habitación</th>
             <th>Nombres</th>
             <th>Doc.</th>
-            <th>Num. Documento</th>
-            <th>Num. telefono</th>
-            <th>Importe a Pagar</th>
-            <th>Importe Pagado</th>
+            <th>Num. Doc</th>
+            <th>Telefono</th>
+            <th>Total a Pagar</th>
+            <th>Monto Pagado</th>
             <th>Observaciones</th>
             <th>Fecha</th>
           </tr>
+
         </thead>
         <tbody>
           {reservas.map((item) => {
