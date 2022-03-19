@@ -1,5 +1,6 @@
 import "./App.css";
 import { db } from "./Firebase";
+import {useState } from "react";
 import Titulo from "./Titulo";
 import Formulario from "./Formulario";
 import Desocupar from "./Desocupar";
@@ -15,6 +16,7 @@ import Caja from "./Caja";
 import Principaldos from "./Principaldos";
 import EditarFormulario from "./EditarFormulario";
 import Tareas from "./Tareas";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 var numeroDeHabitacion;
 
 function actualizarNumeroHabitacion() {
@@ -74,7 +76,7 @@ function App() {
     db.collection("huespedes")
       .add({
         observaciones: observaciones,
-        fecha:new Date().getTime(),
+        fecha: new Date().getTime(),
         verfecha: dayjs().format("DD/MM/YYYY  HH:mm"),
         nombres: nombres,
         documento_de_identificacion: documentodeId,
@@ -101,7 +103,7 @@ function App() {
           });
         db.collection("caja").add({
           fecha: new Date().getTime(),
-          verfecha:dayjs().format("DD/MM/YYYY  HH:mm"),
+          verfecha: dayjs().format("DD/MM/YYYY  HH:mm"),
           tipo: "ingreso",
           descripcion: "Habitación " + numeroDeHabitacion,
           monto: Number(importePagado),
@@ -153,53 +155,89 @@ function App() {
       document.getElementById("menu").style.display = "none";
     }
   }
+  const [usuario, setusuario] = useState(null);
+  let auth = getAuth();
+  //  user = auth.currentUser;
+  setTimeout(() => {
+    // auth = getAuth();
+    let user = auth.currentUser;
+    setusuario(user);
+  }, 2000);
+  function signIn() {
+    signInWithEmailAndPassword(auth, document.getElementById('correo').value, document.getElementById('password').value)
+      .then((userCredential) => {
+        console.log("ingreso exitoso=>");
+        setusuario(userCredential.user);
+      })
+      .catch((error) => {
+        console.log("no se pudo ingresar");
+      });
+  }
 
-  return (
-    <Router>
-      <div>
-        <Titulo />
-        <div className="App">
-          <div id="seccionMenu">
-            <div className="aside">
-              <div>
-                <Menu />
-                <Formulario
-                  nuevoCliente={nuevoCliente}
-                  reservarHabitacion={reservarHabitacion}
-                />
-                <Desocupar vacio={vacio} inputReservar={inputReservar} />
-                <EditarFormulario/>
-                <Habilitar libre={libre} inputReservar={inputReservar} />
+  if (usuario) {
+    return (
+      <Router>
+        <div>
+          <Titulo />
+          <div className="App">
+            <div id="seccionMenu">
+              <div className="aside">
+                <div>
+                  <Menu />
+                  <Formulario
+                    nuevoCliente={nuevoCliente}
+                    reservarHabitacion={reservarHabitacion}
+                  />
+                  <Desocupar vacio={vacio} inputReservar={inputReservar} />
+                  <EditarFormulario />
+                  <Habilitar libre={libre} inputReservar={inputReservar} />
+                </div>
+                <Alertas />
               </div>
-              <Alertas />
             </div>
+            <Switch>
+              <Route exact path="/">
+                <Principal />
+              </Route>
+              <Route exact path="/edicion">
+                <Principaldos />
+              </Route>
+              <Route exact path="/reservaciones">
+                <Reservaciones />
+              </Route>
+              <Route exact path="/clientes">
+                <Clientes />
+              </Route>
+              <Route exact path="/caja">
+                <Caja />
+              </Route>
+              <Route exact path="/tareas">
+                <Tareas />
+              </Route>
+            </Switch>
+            <hr />
           </div>
-          <Switch>
-            <Route exact path="/">
-              <Principal />
-            </Route>
-            <Route exact path="/edicion">
-              <Principaldos />
-            </Route>
-            <Route exact path="/reservaciones">
-              <Reservaciones />
-            </Route>
-            <Route exact path="/clientes">
-              <Clientes />
-            </Route>
-            <Route exact path="/caja">
-              <Caja />
-            </Route>
-            <Route exact path="/tareas">
-              <Tareas />
-            </Route>
-          </Switch>
-          <hr />
         </div>
-        
+      </Router>
+    );
+  } else {
+    return (
+      <div style={{ backgroundColor: 'white', width: "100%", height: "100vh", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ width: "250px", backgroundColor: 'blue', padding: "3%" }}>
+          <h1 style={{ textAlign: "center" }}>Hostal Santa Catalina</h1>
+          <div>
+            <label htmlFor="correo" style={{ color: "white", fontWeight: "bold" }}>Correo:</label><br />
+            <input type="text" id='correo' style={{ width: "95%" }} /><br />
+            <label htmlFor="password" style={{ color: "white", fontWeight: "bold" }}>Contraseña:</label><br />
+            <input type="password" id='password' style={{ width: "95%" }} />
+          </div>
+          <span style={{ display: 'flex', justifyContent: 'right', padding: "2%" }}>
+            <button onClick={signIn} style={{ color: 'white', backgroundColor: 'green' }}>Sign In</button>
+          </span>
+        </div>
       </div>
-    </Router>
-  );
+    )
+  }
 }
 
 export default App;

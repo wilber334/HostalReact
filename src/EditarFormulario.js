@@ -7,7 +7,7 @@ function onSubmit(event) {
 function EditarFormulario() {
   const [usuario, setusuario] = useState([]);
   //reparar esta parte, parece que no reconoce la ruta 
-  useEffect(() => {
+  useEffect(() => {     
     db.collection("editar")
       .doc("editarUsuario")
       .onSnapshot((doc) => {
@@ -81,12 +81,14 @@ function EditarFormulario() {
   }
 
   return (
+    
     <form
       className="formulario"
       id="editarformulario"
       onSubmit={onSubmit}
       autoComplete="off"
     >
+      {usuario?
       <div className="form_container">
         <div className="form_group">
           <input
@@ -242,6 +244,7 @@ function EditarFormulario() {
           </div>
         </div>
       </div>
+      :null}
     </form>
   );
 }

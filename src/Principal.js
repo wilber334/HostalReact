@@ -59,7 +59,7 @@ function Principal() {
       db.collection("editar")
       .doc("editarUsuario")
       .update({
-        usuario:usuario, 
+        usuario:usuario,
       });
       document.getElementById("formulario").style.display = "none";
       document.getElementById("ocupado").style.display = "block";
