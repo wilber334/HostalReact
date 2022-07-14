@@ -76,7 +76,7 @@ function Exportar(table,name){//FUNCION PARA EXPORTAR EN EXCEL
                 <td>{item.numero_de_identificacion}</td>
                 <td>{item.numero_Telefono}</td>
                 <td>{item.numero_Habitacion}</td>
-                <td>{item.numero_Telefono}</td>
+                <td>{item.tiempo_Hospedaje}</td>
                 <td>{item.importe_Pagar}</td>
                 <td>{item.importe_Pagado}</td>
                 <td>{item.Metodo_Pago}</td>

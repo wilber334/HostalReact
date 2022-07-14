@@ -23,17 +23,9 @@ function EditarFormulario() {
           // doc.data() will be undefined in this case
           console.log("No such document!");
         }
-
-        // user = doc.data().usuario; //aqui obtenemos el id para buscar en huespedes        
-        // db.collection("huespedes")
-        //   .doc(user)
-        //   .get()
-        //   .then((doc) => {
-        //     setusuario(doc.data());
-        //   });
       });
 
-  }, []);
+  }, [usuario]);
 
   function actualizarHuesped() {
     if (window.confirm("Seguro que desea Actualizar?")) {
@@ -227,13 +219,6 @@ function EditarFormulario() {
         </div>
         <div className="registrar">
           <div>
-            {/* <button
-              className="btn-registrar"
-              id="clic-reservar"
-              style={{ backgroundColor: "blue"}}
-            >
-              Editar
-            </button> */}
             <button
               className="btn-registrar"
               onClick={actualizarHuesped}

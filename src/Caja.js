@@ -232,7 +232,8 @@ function Caja() {
                   tipo: "ingreso",
                   descripcion: document.getElementById("nombreturno").value+": abrir caja",
                   monto: Number(document.getElementById("montonuevocaja").value),
-                  metodoPago: "Efectivo"
+                  metodoPago: "Efectivo",
+                  tipo2:"abrirCaja"
                 });
                 setturno(document.getElementById('nombreturno').value);
                 setabrirformcaja(!abrirformcaja);
