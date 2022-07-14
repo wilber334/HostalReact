@@ -14,8 +14,7 @@ function Reservaciones() {
     db.collection("reservas")
       .where("fecha_reservada", ">=", fechafiltro)
       .orderBy("fecha_reservada")
-      .get()
-      .then((querySnapshot) => {
+      .onSnapshot((querySnapshot) => {
         const docs = [];
         querySnapshot.forEach((doc) => {
           docs.push({ ...doc.data(), id: doc.id });
